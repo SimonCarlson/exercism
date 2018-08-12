@@ -34,8 +34,9 @@ pub mod graph {
     pub mod graph_items {
 
         pub mod edge {
-
             #[derive(Clone)]
+            #[derive(PartialEq)]
+            #[derive(Debug)]
             pub struct Edge {
                 from: String,
                 to: String,
@@ -49,15 +50,15 @@ pub mod graph {
                     }
                 }
             }
+
         }
 
         pub mod node {
-            use std::cmp;
-            use std::fmt;
             use std::collections;
 
-
             #[derive(Clone)]
+            #[derive(PartialEq)]
+            #[derive(Debug)]
             pub struct Node {
                 name: String,
                 attrs: collections::HashMap<String, String>,
@@ -76,18 +77,6 @@ pub mod graph {
                     let value = input[0].1.to_string();
                     self.attrs.insert(key, value);
                     self
-                }
-            }
-
-            impl cmp::PartialEq for Node {
-                fn eq(&self, node: &Node) -> bool {
-                    self.name == node.name
-                }
-            }
-
-            impl fmt::Debug for Node {
-                fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-                    write!(f, "Name: {}", self.name)
                 }
             }
 
