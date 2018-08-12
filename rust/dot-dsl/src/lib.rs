@@ -28,18 +28,30 @@ pub mod graph {
             self
         }
 
+        pub fn with_attrs(mut self, attrs: &[(&str, &str)]) -> Self {
+            for attr_pair in attrs.iter() {
+                let (key, value) = attr_pair;
+                self.attrs.insert(key.to_string(), value.to_string());
+            }
+            
+            self
+        }
+
         
     }
 
     pub mod graph_items {
 
         pub mod edge {
+            use std::collections;
+
             #[derive(Clone)]
             #[derive(PartialEq)]
             #[derive(Debug)]
             pub struct Edge {
                 from: String,
                 to: String,
+                attrs: collections::HashMap<String, String>,
             }
 
             impl Edge {
@@ -47,8 +59,19 @@ pub mod graph {
                     Edge {
                         from: String::from(from),
                         to: String::from(to),
+                        attrs: hashmap!{},
                     }
                 }
+
+                pub fn with_attrs(mut self, attrs: &[(&str, &str)]) -> Self {
+                    for attr_pair in attrs.iter() {
+                        let (key, value) = attr_pair;
+                        self.attrs.insert(key.to_string(), value.to_string());
+                    }
+            
+                    self
+                }
+
             }
 
         }
@@ -72,10 +95,12 @@ pub mod graph {
                     }
                 }
 
-                pub fn with_attrs(mut self, input: &[(&str, &str)]) -> Self {
-                    let key = input[0].0.to_string();
-                    let value = input[0].1.to_string();
-                    self.attrs.insert(key, value);
+                pub fn with_attrs(mut self, attrs: &[(&str, &str)]) -> Self {
+                    for attr_pair in attrs.iter() {
+                        let (key, value) = attr_pair;
+                        self.attrs.insert(key.to_string(), value.to_string());
+                    }
+            
                     self
                 }
             }
