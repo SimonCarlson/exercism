@@ -1,13 +1,53 @@
-pub struct Brackets;
+pub struct Brackets<'a> {
+    stack: Vec<&'a str>,
+}
 
-impl<'a> From<&'a str> for Brackets {
+impl<'a> From<&'a str> for Brackets<'a> {
     fn from(input: &str) -> Self {
-        unimplemented!("From the '{}' input construct a new Brackets struct", input);
+        let mut stack: Vec<&str> = Vec::new();
+        for c in input.chars() {
+            let slice: &str = &c.to_string()[..];
+            stack.push(slice);
+        };
+
+        Brackets {
+            stack
+        }
     }
 }
 
-impl Brackets {
+impl<'a> Brackets<'a> {
     pub fn are_balanced(&self) -> bool {
-        unimplemented!("Check if your Brackets struct contains balanced brackets");
+        let mut stack = Vec::new();
+        for c in &self.stack {
+            // Converts the character to a String to a &str... Feels dumb
+            match &c.to_string()[..] {
+                "(" | "[" | "{" => stack.push(c),
+                ")" | "]" | "}" => {
+                    let popped = stack.pop();
+                    match popped {
+                        Some(&")") => {
+                            if c != &"(" {
+                                return false
+                            };
+                        },
+                        Some(&"]") => {
+                            if c != &"[" {
+                                return false
+                            };
+                        },
+                        Some(&"}") => {
+                            if c != &"{" {
+                                return false
+                            };
+                        },
+                        _ => return false,
+                    }
+                },
+                _ => continue,
+            }
+        }
+
+        true
     }
 }
