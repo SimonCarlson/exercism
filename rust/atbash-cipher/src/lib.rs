@@ -1,12 +1,11 @@
-/// "Encipher" with the Atbash cipher.
-pub fn encode(plain: &str) -> String {
+pub fn crypt(input: &str) -> String {
     let encoding: Vec<char> = "abcdefghijklmnopqrstuvwxyz".chars().rev().collect();
     let mut crypto = String::new();
-    for c in plain.replace(" ", "").replace(",", "").replace(".", "").to_ascii_lowercase().chars() {
+    for c in input.replace(" ", "").replace(",", "").replace(".", "").to_ascii_lowercase().chars() {
         if !c.is_ascii() {
             continue
         };
-        
+
         if c.is_digit(10) {
             crypto.push(c)
         } else {
@@ -15,6 +14,12 @@ pub fn encode(plain: &str) -> String {
         }
     };
 
+    crypto
+}
+
+/// "Encipher" with the Atbash cipher.
+pub fn encode(plain: &str) -> String {
+    let crypto = crypt(plain);
     let mut space_crypto = String::new();
     for (i, c) in crypto.chars().enumerate() {
         if i % 5 == 0 && i != 0 {
@@ -28,15 +33,5 @@ pub fn encode(plain: &str) -> String {
 
 /// "Decipher" with the Atbash cipher.
 pub fn decode(cipher: &str) -> String {
-    let encoding: Vec<char> = "abcdefghijklmnopqrstuvwxyz".chars().rev().collect();
-    let mut plain = String::new();
-    for c in cipher.replace(" ", "").replace(",", "").replace(".","").to_ascii_lowercase().chars() {
-        if c.is_digit(10) {
-            plain.push(c)
-        } else {
-            plain.push(encoding[c as usize - 97])
-        }
-    };
-
-    plain
+    crypt(cipher)
 }
