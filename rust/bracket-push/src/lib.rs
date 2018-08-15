@@ -26,18 +26,18 @@ impl<'a> Brackets {
                 ')' | ']' | '}' => {
                     let popped = stack.pop();
                     match popped {
-                        Some(')') => {
-                            if c != &'(' {
+                        Some('(') => {
+                            if c != &')' {
                                 return false
                             };
                         },
-                        Some(']') => {
-                            if c != &'[' {
+                        Some('[') => {
+                            if c != &']' {
                                 return false
                             };
                         },
-                        Some('}') => {
-                            if c != &'{' {
+                        Some('{') => {
+                            if c != &'}' {
                                 return false
                             };
                         },
