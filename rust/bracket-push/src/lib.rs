@@ -1,13 +1,12 @@
-pub struct Brackets<'a> {
-    stack: Vec<&'a str>,
+pub struct Brackets {
+    stack: Vec<char>,
 }
 
-impl<'a> From<&'a str> for Brackets<'a> {
+impl<'a> From<&'a str> for Brackets {
     fn from(input: &str) -> Self {
-        let mut stack: Vec<&str> = Vec::new();
+        let mut stack: Vec<char> = Vec::new();
         for c in input.chars() {
-            let slice: &str = &c.to_string()[..];
-            stack.push(slice);
+            stack.push(c);
         };
 
         Brackets {
@@ -16,28 +15,29 @@ impl<'a> From<&'a str> for Brackets<'a> {
     }
 }
 
-impl<'a> Brackets<'a> {
+impl<'a> Brackets {
     pub fn are_balanced(&self) -> bool {
         let mut stack = Vec::new();
         for c in &self.stack {
             // Converts the character to a String to a &str... Feels dumb
-            match &c.to_string()[..] {
-                "(" | "[" | "{" => stack.push(c),
+            let slice = &c.to_string()[..];
+            match slice {
+                "(" | "[" | "{" => stack.push(slice),
                 ")" | "]" | "}" => {
                     let popped = stack.pop();
                     match popped {
-                        Some(&")") => {
-                            if c != &"(" {
+                        Some(")") => {
+                            if slice != "(" {
                                 return false
                             };
                         },
-                        Some(&"]") => {
-                            if c != &"[" {
+                        Some("]") => {
+                            if slice != "[" {
                                 return false
                             };
                         },
-                        Some(&"}") => {
-                            if c != &"{" {
+                        Some("}") => {
+                            if slice != "{" {
                                 return false
                             };
                         },
