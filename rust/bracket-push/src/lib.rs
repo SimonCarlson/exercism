@@ -18,26 +18,24 @@ impl<'a> From<&'a str> for Brackets {
 impl<'a> Brackets {
     pub fn are_balanced(&self) -> bool {
         let mut stack = Vec::new();
-        for c in &self.stack {
-            // Converts the character to a String to a &str... Feels dumb
-            // let slice = &c.to_string()[..];
+        for &c in &self.stack {
             match c {
                 '(' | '[' | '{' => stack.push(c),
                 ')' | ']' | '}' => {
                     let popped = stack.pop();
                     match popped {
                         Some('(') => {
-                            if c != &')' {
+                            if c != ')' {
                                 return false
                             };
                         },
                         Some('[') => {
-                            if c != &']' {
+                            if c != ']' {
                                 return false
                             };
                         },
                         Some('{') => {
-                            if c != &'}' {
+                            if c != '}' {
                                 return false
                             };
                         },
