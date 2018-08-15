@@ -20,24 +20,24 @@ impl<'a> Brackets {
         let mut stack = Vec::new();
         for c in &self.stack {
             // Converts the character to a String to a &str... Feels dumb
-            let slice = &c.to_string()[..];
-            match slice {
-                "(" | "[" | "{" => stack.push(slice),
-                ")" | "]" | "}" => {
+            // let slice = &c.to_string()[..];
+            match c {
+                '(' | '[' | '{' => stack.push(c),
+                ')' | ']' | '}' => {
                     let popped = stack.pop();
                     match popped {
-                        Some(")") => {
-                            if slice != "(" {
+                        Some(')') => {
+                            if c != &'(' {
                                 return false
                             };
                         },
-                        Some("]") => {
-                            if slice != "[" {
+                        Some(']') => {
+                            if c != &'[' {
                                 return false
                             };
                         },
-                        Some("}") => {
-                            if slice != "{" {
+                        Some('}') => {
+                            if c != &'{' {
                                 return false
                             };
                         },
