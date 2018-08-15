@@ -48,6 +48,11 @@ impl<'a> Brackets {
             }
         }
 
+        // If there are items left in the stack, they were unbalanced
+        if stack.len() > 0 {
+            return false
+        };
+
         true
     }
 }
