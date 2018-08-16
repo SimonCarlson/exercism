@@ -9,13 +9,17 @@ pub enum Comparison {
 
 pub fn sublist<T: PartialEq>(a: &[T], b: &[T]) -> Comparison {
     if a.len() == b.len() {
+        let mut equal = true;
         for (i, j) in a.iter().zip(b.iter()) {
             if i != j {
-                break
+                equal = false;
+                break;
             }
         }
 
-        return Comparison::Equal
+        if equal {
+            return Comparison::Equal
+        };
     };
 
     Comparison::Unequal
