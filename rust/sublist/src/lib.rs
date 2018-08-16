@@ -22,5 +22,13 @@ pub fn sublist<T: PartialEq>(a: &[T], b: &[T]) -> Comparison {
         };
     };
 
+    if a.len() == 0 && b.len() > 0 {
+        return Comparison::Sublist
+    };
+
+    if a.len() > 0 && b.len() == 0 {
+        return Comparison::Superlist
+    };
+
     Comparison::Unequal
 }
