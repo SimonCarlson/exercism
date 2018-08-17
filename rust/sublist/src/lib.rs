@@ -8,13 +8,13 @@ pub enum Comparison {
 
 
 pub fn sublist<T: PartialEq>(a: &[T], b: &[T]) -> Comparison {
-    if a.len() == 0 && b.len() > 0 {
-        return Comparison::Sublist
-    };
-
-    if a.len() > 0 && b.len() == 0 {
-        return Comparison::Superlist
-    };
+    if a.len() > b.len() {
+        let result = sublist(b, a);
+        match result {
+            Comparison::Sublist => return Comparison::Superlist,
+            _ => return result
+        };
+    }
 
     for i in 0..(b.len() - a.len() + 1) {
         if b[i..(i + a.len())] == a[..] {
