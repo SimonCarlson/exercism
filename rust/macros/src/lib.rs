@@ -10,4 +10,15 @@ macro_rules! hashmap {
             hm
         }
     };
+
+    // Trailing comma
+    ( $($x:expr => $z:expr,) * ) => {
+        {
+            let mut hm = HashMap::new();
+            $(
+                hm.insert($x, $z);
+            )*
+            hm
+        }
+    };
 }
