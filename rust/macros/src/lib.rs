@@ -1,6 +1,13 @@
 #[macro_export]
 macro_rules! hashmap {
-    () => {
-        unimplemented!()
+    // No trailing comma
+    ( $($x:expr => $z:expr), * ) => {
+        {
+            let mut hm = HashMap::new();
+            $(
+                hm.insert($x, $z);
+            )*
+            hm
+        }
     };
 }
