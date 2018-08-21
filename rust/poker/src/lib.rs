@@ -5,3 +5,16 @@
 pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
     unimplemented!("Out of {:?}, which hand wins?", hands)
 }
+
+#[derive(PartialOrd)]
+enum Hand {
+    StraightFlush,
+    FourOfAKind,
+    FullHouse,
+    Flush,
+    Straight,
+    ThreeOfAKind,
+    TwoPair,
+    OnePair,
+    HighCard,
+}
