@@ -12,8 +12,9 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
         hm.insert(hand, hand_type);
     };
 
-    let mut winners: Vec<_> = hm.iter().collect();
-    winners.sort_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Greater));
+    let mut hand_types: Vec<_> = hm.iter().collect();
+    hand_types.sort_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Greater));
+
 
 
     return None
