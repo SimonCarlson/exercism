@@ -7,7 +7,7 @@ use std::cmp::Ordering;
 /// the winning hand(s) as were passed in, not reconstructed strings which happen to be equal.
 pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
     let mut hm: HashMap<&str, Hand> = HashMap::new();
-    for hand in hands.iter() {
+    for &hand in hands.iter() {
         let hand_type = find_hand_type(hand);
         hm.insert(hand, hand_type);
     };
@@ -15,12 +15,19 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
     let mut hand_types: Vec<_> = hm.iter().collect();
     hand_types.sort_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Greater));
 
+    let mut winning_type = &Hand::HighCard;
+    let mut winners: Vec<&str> = Vec::new();
+    for winner in hand_types {
+        if winner.1 >= winning_type {
+            winning_type = winner.1;
+            winners.push(winner.0);
+        }
+    }
 
-
-    return None
+    return Some(winners)
 }
 
-pub fn find_hand_type(hand: &&str) -> Hand {
+pub fn find_hand_type(hand: &str) -> Hand {
     Hand::HighCard
 }
 
