@@ -78,7 +78,14 @@ fn high_card_or_straight(numbers: &Vec<u32>, suites: &Vec<&str>) -> Hand {
 }
 
 fn two_pair_or_three_of_a_kind(numbers: &Vec<u32>) -> Hand {
-    return Hand::HighCard
+    for number in numbers {
+        let x = numbers.iter().filter(|v| *v == number).count();
+        if x == 3 {
+            return Hand::FullHouse;
+        }
+    }
+
+    Hand::TwoPair
 }
 
 fn full_house_or_four_of_a_kind(numbers: &Vec<u32>) -> Hand {
