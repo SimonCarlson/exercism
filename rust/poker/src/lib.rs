@@ -63,10 +63,10 @@ pub fn find_hand_type(hand: &str) -> Hand {
 
     let hs: HashSet<_> = HashSet::from_iter(&numbers);
     match hs.len() {
-        5 => high_card_or_straight(&numbers, &suites),
+        5 => return high_card_or_straight(&numbers, &suites),
         4 => return Hand::OnePair,
-        3 => two_pair_or_three_of_a_kind(&numbers),
-        2 => full_house_or_four_of_a_kind(&numbers),
+        3 => return two_pair_or_three_of_a_kind(&numbers),
+        2 => return full_house_or_four_of_a_kind(&numbers),
         _ => return Hand::HighCard,
     };
     
