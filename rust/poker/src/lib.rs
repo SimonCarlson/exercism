@@ -63,7 +63,7 @@ pub fn find_hand_type(hand: &str) -> Hand {
 
     let hs: HashSet<_> = HashSet::from_iter(&numbers);
     match hs.len() {
-        5 => high_card_or_straigth(&numbers, &suites),
+        5 => high_card_or_straight(&numbers, &suites),
         4 => return Hand::OnePair,
         3 => two_pair_or_three_of_a_kind(&numbers),
         2 => full_house_or_four_of_a_kind(&numbers),
@@ -73,7 +73,7 @@ pub fn find_hand_type(hand: &str) -> Hand {
     Hand::HighCard
 }
 
-fn high_card_or_straigth(numbers: &Vec<u32>, suites: &Vec<&str>) -> Hand {
+fn high_card_or_straight(numbers: &Vec<u32>, suites: &Vec<&str>) -> Hand {
     return Hand::HighCard
 }
 
