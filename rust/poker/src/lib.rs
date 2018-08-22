@@ -2,6 +2,8 @@
 extern crate maplit;
 
 use std::collections::HashMap;
+use std::collections::HashSet;
+use std::iter::FromIterator;
 use std::cmp::Ordering;
 
 /// Given a list of poker hands, return a list of those hands which win.
@@ -58,8 +60,29 @@ pub fn find_hand_type(hand: &str) -> Hand {
         }
         suites.push(suite);
     }
+
+    let hs: HashSet<_> = HashSet::from_iter(&numbers);
+    match hs.len() {
+        5 => high_card_or_straigth(&numbers, &suites),
+        4 => return Hand::OnePair,
+        3 => two_pair_or_three_of_a_kind(&numbers),
+        2 => full_house_or_four_of_a_kind(&numbers),
+        _ => return Hand::HighCard,
+    };
     
     Hand::HighCard
+}
+
+fn high_card_or_straigth(numbers: &Vec<u32>, suites: &Vec<&str>) -> Hand {
+    return Hand::HighCard
+}
+
+fn two_pair_or_three_of_a_kind(numbers: &Vec<u32>) -> Hand {
+    return Hand::HighCard
+}
+
+fn full_house_or_four_of_a_kind(numbers: &Vec<u32>) -> Hand {
+    return Hand::HighCard
 }
 
 #[derive(PartialOrd, PartialEq)]
