@@ -89,7 +89,14 @@ fn two_pair_or_three_of_a_kind(numbers: &Vec<u32>) -> Hand {
 }
 
 fn full_house_or_four_of_a_kind(numbers: &Vec<u32>) -> Hand {
-    return Hand::HighCard
+    for number in numbers {
+        let x = numbers.iter().filter(|v| *v == number).count();
+        if x == 4 {
+            return Hand::FourOfAKind
+        }
+    }
+
+    Hand::FullHouse
 }
 
 #[derive(PartialOrd, PartialEq)]
