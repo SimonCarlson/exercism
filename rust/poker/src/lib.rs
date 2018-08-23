@@ -35,8 +35,7 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
 
 pub fn find_hand_type(hand: &str) -> Hand {
     // Split input into numbers and (1-13) and letters (S,H,D,C)
-    // Count equal numbers, map to hand
-    // If no 1-to-1 mapping, look for straight/high card
+    // Count equal numbers, map to hand types
     let split: Vec<_> = hand.split_whitespace().collect();
     let mut numbers: Vec<u32> = Vec::new();
     let mut suites: Vec<&str> = Vec::new();
@@ -61,6 +60,8 @@ pub fn find_hand_type(hand: &str) -> Hand {
         suites.push(suite);
     }
 
+    // Find if normal flush (same suites)
+
     let hs: HashSet<_> = HashSet::from_iter(&numbers);
     match hs.len() {
         5 => return high_card_or_straight(&numbers, &suites),
@@ -74,7 +75,28 @@ pub fn find_hand_type(hand: &str) -> Hand {
 }
 
 fn high_card_or_straight(numbers: &Vec<u32>, suites: &Vec<&str>) -> Hand {
-    return Hand::HighCard
+    // If cards are in sequence, straight
+    // If all same suites, straight flush
+    // Else high card
+
+    for (low, high) in numbers.iter().zip(numbers.iter().skip(1)) {
+           // If any pair differs by more than one, it is not a straight
+           if high - low > 1 {
+               return Hand::HighCard
+           }
+    }
+
+    // If it is a straight, is it also a flush?
+    if is_flush(suites) {
+        return Hand::StraightFlush
+    } else {
+        return Hand::Straight
+    }
+}
+
+fn is_flush(suites: &Vec<&str>) -> bool {
+    let hs: HashSet<_> = HashSet::from_iter(suites.iter());
+    hs.len() == 1
 }
 
 fn two_pair_or_three_of_a_kind(numbers: &Vec<u32>) -> Hand {
