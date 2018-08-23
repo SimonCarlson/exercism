@@ -13,19 +13,20 @@ use std::cmp::Ordering;
 pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
     let mut hm: HashMap<&str, Hand> = HashMap::new();
     for &hand in hands.iter() {
+        println!("{}", hand);
         let hand_type = find_hand_type(hand);
         hm.insert(hand, hand_type);
     }
 
-    let mut hand_types: Vec<_> = hm.iter().collect();
-    hand_types.sort_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Greater));
+    let hand_types: Vec<_> = hm.iter().collect();
 
-    let mut winning_type = &Hand::HighCard;
     let mut winners: Vec<&str> = Vec::new();
 
-    for winner in hand_types {
-        if winner.1 >= winning_type {
-            winning_type = winner.1;
+    let max = hand_types.iter().max_by(|x, y| x.1.partial_cmp(y.1).unwrap()).unwrap();
+    //println!("{:?}", max.1);
+
+    for winner in &hand_types {
+        if winner.1 == max.1 {
             winners.push(winner.0);
         }
     }
@@ -36,7 +37,6 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
 pub fn find_hand_type(hand: &str) -> Hand {
     // Split input into numbers and (1-13) and letters (S,H,D,C)
     // Count equal numbers, map to hand types
-    let split: Vec<_> = hand.split_whitespace().collect();
     let mut numbers: Vec<u32> = Vec::new();
     let mut suites: Vec<&str> = Vec::new();
     let high_cards = hashmap!{
@@ -46,9 +46,17 @@ pub fn find_hand_type(hand: &str) -> Hand {
         "A" => 14 as u32,
     };
 
+    let split: Vec<_> = hand.split_whitespace().collect();
     for card in split {
-        let mut number = card.get(..1).unwrap();
-        let suite = card.get(1..).unwrap();
+        let mut number;
+        let mut suite = card.get(1..).unwrap();
+        if suite.len() > 1 {
+            suite = card.get(2..).unwrap();
+            number = card.get(..2).unwrap();
+        } else {
+            number = card.get(..1).unwrap();
+        }
+
         let x = number.parse::<u32>();
         match x {
             Ok(v) => numbers.push(v),
@@ -60,9 +68,11 @@ pub fn find_hand_type(hand: &str) -> Hand {
         suites.push(suite);
     }
 
+
     // Find if normal flush (same suites)
 
     let hs: HashSet<_> = HashSet::from_iter(&numbers);
+    println!("{}", hs.len());
     match hs.len() {
         5 => return high_card_or_straight(&numbers, &suites),
         4 => return Hand::OnePair,
@@ -70,8 +80,6 @@ pub fn find_hand_type(hand: &str) -> Hand {
         2 => return full_house_or_four_of_a_kind(&numbers),
         _ => return Hand::HighCard,
     };
-    
-    Hand::HighCard
 }
 
 fn high_card_or_straight(numbers: &Vec<u32>, suites: &Vec<&str>) -> Hand {
@@ -121,15 +129,15 @@ fn full_house_or_four_of_a_kind(numbers: &Vec<u32>) -> Hand {
     Hand::FullHouse
 }
 
-#[derive(PartialOrd, PartialEq)]
+#[derive(PartialOrd, PartialEq, Debug)]
 pub enum Hand {
-    StraightFlush,
-    FourOfAKind,
-    FullHouse,
-    Flush,
-    Straight,
-    ThreeOfAKind,
-    TwoPair,
-    OnePair,
     HighCard,
+    OnePair,
+    TwoPair,
+    ThreeOfAKind,
+    Straight,
+    Flush,
+    FullHouse,
+    FourOfAKind,
+    StraightFlush,
 }
