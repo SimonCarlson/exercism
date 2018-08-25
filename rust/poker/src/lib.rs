@@ -1,3 +1,6 @@
+use std::collections::HashSet;
+use std::iter::FromIterator;
+
 // I found this exercise tricky, looked a lot at shybyte's solution
 
 /// Given a list of poker hands, return a list of those hands which win.
@@ -5,13 +8,63 @@
 /// Note the type signature: this function should return _the same_ reference to
 /// the winning hand(s) as were passed in, not reconstructed strings which happen to be equal.
 pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
+    let mut hands: Vec<_> = hands.iter().map(|hand| (hand, Hand::from(hand).hand_type())).collect();
 
     None
 }
 
 struct Hand {
     cards: Vec<Card>,
-    score: u32,
+}
+
+impl Hand {
+    fn from (hand_string: &str) -> Hand {
+        let cards = hand_string.split(" ").map(Card::from).collect();
+
+        Hand { cards }
+    }
+
+    fn hand_type(&self) -> HandType {
+        let mut ranks = Vec::new();
+        let mut suites = Vec::new();
+        
+        for card in &self.cards {
+            ranks.push(&card.rank);
+            suites.push(&card.suite);
+        }
+
+        let rank_hs: HashSet<_> = HashSet::from_iter(ranks.iter());
+        let suite_hs: HashSet<_> = HashSet::from_iter(suites.iter());
+        let is_straight;
+        if suite_hs.len() == 5 {
+            is_straight = true;
+        } else {
+            is_straight = false;
+        }
+
+        match rank_hs.len() {
+            5 => {
+                
+            },
+            4 => {
+
+            },
+            3 => {
+
+            },
+            2 => {
+
+            },
+            1 => {
+                
+            },
+            _ => panic!("No cards in hand.")
+        }
+
+
+        HandType::HighCard
+    }
+
 }
 
 struct Card {
@@ -48,6 +101,7 @@ impl Suite {
     }
 }
 
+#[derive(Hash, Eq, PartialEq, Debug)]
 struct Rank(u32);
 
 impl Rank {
