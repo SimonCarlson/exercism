@@ -1,3 +1,5 @@
+// I found this exercise tricky, looked a lot at shybyte's solution
+
 /// Given a list of poker hands, return a list of those hands which win.
 ///
 /// Note the type signature: this function should return _the same_ reference to
