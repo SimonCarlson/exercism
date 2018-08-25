@@ -36,7 +36,7 @@ impl Hand {
         let rank_hs: HashSet<_> = HashSet::from_iter(ranks.iter());
         let suite_hs: HashSet<_> = HashSet::from_iter(suites.iter());
         let is_straight;
-        if suite_hs.len() == 5 {
+        if suite_hs.len() == 1 {
             is_straight = true;
         } else {
             is_straight = false;
@@ -44,7 +44,7 @@ impl Hand {
 
         match rank_hs.len() {
             5 => {
-                
+
             },
             4 => {
 
