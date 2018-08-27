@@ -188,12 +188,12 @@ impl Rank {
 #[derive(PartialOrd, PartialEq, Ord, Eq, Clone)]
 enum HandType {
     HighCard([u32; 5]),
-    OnePair,
-    TwoPair,
-    ThreeOfAKind,
-    Straight,
-    Flush,
-    FullHouse,
-    FourOfAKind,
-    StraightFlush
+    OnePair([u32; 5]),
+    TwoPair([u32; 5]),
+    ThreeOfAKind([u32; 5]),
+    Straight([u32; 5]),
+    Flush([u32; 5]),
+    FullHouse([u32; 5]),
+    FourOfAKind([u32; 5]),
+    StraightFlush([u32; 5])
 }
