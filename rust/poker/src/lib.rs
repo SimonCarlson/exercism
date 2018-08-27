@@ -76,7 +76,18 @@ impl Hand {
 }
 
 fn high_card_or_straight(cards: &Vec<Card>) -> HandType {
-    
+    let mut ranks: Vec<_> = Vec::new();
+    for card in cards {
+        ranks.push(&card.rank.0)
+    }
+
+    for (&low, &high) in ranks.iter().zip(ranks.iter().skip(1)) {
+        if high - low > 1 {
+            return HandType::HighCard
+        }
+    }
+
+    HandType::Straight
 }
 
 fn two_pair_or_three_of_a_kind(cards: &Vec<Card>) -> HandType {
