@@ -16,7 +16,7 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
     let winning_type = hands[0].1.clone();
 
     let winners: Vec<&'a str> = hands.into_iter()
-        .take_while((|&(_, ref hand_type)| *hand_type == winning_type))
+        .take_while(|&(_, ref hand_type)| *hand_type == winning_type)
         .map(|(&hand_string, _)| hand_string)
         .collect();
     
@@ -67,17 +67,22 @@ impl Hand {
             2 => {
                 hand_type = full_house_or_four_of_a_kind(&self.cards)
             },
-            _ => hand_type = HandType::HighCard
+            _ => hand_type = HandType::HighCard([ranks[0].0,ranks[1].0,ranks[2].0,ranks[3].0,ranks[4].0])
         }
 
-
-        if hand_type == HandType::HighCard && is_flush {
-            return HandType::Flush
-        } else if hand_type == HandType::Straight && is_flush {
-            return HandType::StraightFlush
-        } else {
-            return hand_type
+        if let HandType::HighCard([_, _, _, _, _]) = hand_type {
+            if is_flush {
+                return HandType::Flush
+            }
         }
+
+        if let HandType::Straight = hand_type {
+            if is_flush {
+                return HandType::StraightFlush
+            }
+        }
+
+        hand_type
     }
 
 }
@@ -90,7 +95,7 @@ fn high_card_or_straight(cards: &Vec<Card>) -> HandType {
 
     for (&low, &high) in ranks.iter().zip(ranks.iter().skip(1)) {
         if high - low > 1 {
-            return HandType::HighCard
+            return HandType::HighCard([*ranks[0],*ranks[1],*ranks[2],*ranks[3],*ranks[4]])
         }
     }
 
@@ -164,7 +169,7 @@ impl Suite {
     }
 }
 
-#[derive(Hash, Eq, PartialEq, Debug)]
+#[derive(Hash, Eq, PartialEq, Debug, Clone, Ord, PartialOrd)]
 struct Rank(u32);
 
 impl Rank {
@@ -182,7 +187,7 @@ impl Rank {
 
 #[derive(PartialOrd, PartialEq, Ord, Eq, Clone)]
 enum HandType {
-    HighCard,
+    HighCard([u32; 5]),
     OnePair,
     TwoPair,
     ThreeOfAKind,
