@@ -14,6 +14,7 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
     let mut hands: Vec<_> = hands.iter().map(|hand| (hand, Hand::from(hand).hand_type())).collect();
     hands.sort_by(|&(_, ref type1), &(_, ref type2)| type2.cmp(type1));
     let winning_type = hands[0].1.clone();
+    println!("{:?}", winning_type);
 
     let winners: Vec<&'a str> = hands.into_iter()
         .take_while(|&(_, ref hand_type)| *hand_type == winning_type)
@@ -42,6 +43,8 @@ impl Hand {
             ranks.push(&card.rank);
             suites.push(&card.suite);
         }
+
+        ranks.sort();
 
         let rank_hs: HashSet<_> = HashSet::from_iter(ranks.iter());
         let suite_hs: HashSet<_> = HashSet::from_iter(suites.iter());
@@ -185,7 +188,7 @@ impl Rank {
 }
 
 
-#[derive(PartialOrd, PartialEq, Ord, Eq, Clone)]
+#[derive(PartialOrd, PartialEq, Ord, Eq, Clone, Debug)]
 enum HandType {
     HighCard([u32; 5]),
     OnePair([u32; 5]),
