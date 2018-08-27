@@ -12,8 +12,15 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
     // Sort the list after type, descending
     // Pick all hands of the highest type as winners? Or some cost function?
     let mut hands: Vec<_> = hands.iter().map(|hand| (hand, Hand::from(hand).hand_type())).collect();
+    hands.sort_by(|&(_, ref type1), &(_, ref type2)| type2.cmp(type1));
+    let winning_type = hands[0].1.clone();
 
-    None
+    let winners: Vec<&'a str> = hands.into_iter()
+        .take_while((|&(_, ref hand_type)| *hand_type == winning_type))
+        .map(|(&hand_string, _)| hand_string)
+        .collect();
+    
+    Some(winners)
 }
 
 struct Hand {
@@ -91,13 +98,35 @@ fn high_card_or_straight(cards: &Vec<Card>) -> HandType {
 }
 
 fn two_pair_or_three_of_a_kind(cards: &Vec<Card>) -> HandType {
+    let mut ranks: Vec<_> = Vec::new();
+    for card in cards {
+        ranks.push(&card.rank.0)
+    }
 
-    HandType::HighCard
+    for rank in &ranks {
+        let x = ranks.iter().filter(|v| *v == rank).count();
+        if x == 3 {
+            return HandType::ThreeOfAKind
+        }
+    }
+
+    HandType::TwoPair
 }
 
 fn full_house_or_four_of_a_kind(cards: &Vec<Card>) -> HandType {
+    let mut ranks: Vec<_> = Vec::new();
+    for card in cards {
+        ranks.push(&card.rank.0)
+    }
 
-    HandType::HighCard
+    for rank in &ranks {
+        let x = ranks.iter().filter(|v| *v == rank).count();
+        if x == 4 {
+            return HandType::FourOfAKind
+        }
+    }
+
+    HandType::FullHouse
 }
 
 struct Card {
@@ -151,7 +180,7 @@ impl Rank {
 }
 
 
-#[derive(PartialOrd, PartialEq)]
+#[derive(PartialOrd, PartialEq, Ord, Eq, Clone)]
 enum HandType {
     HighCard,
     OnePair,
