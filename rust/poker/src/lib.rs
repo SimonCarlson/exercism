@@ -8,6 +8,9 @@ use std::iter::FromIterator;
 /// Note the type signature: this function should return _the same_ reference to
 /// the winning hand(s) as were passed in, not reconstructed strings which happen to be equal.
 pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
+    // Store the hand ref with its type
+    // Sort the list after type, descending
+    // Pick all hands of the highest type as winners? Or some cost function?
     let mut hands: Vec<_> = hands.iter().map(|hand| (hand, Hand::from(hand).hand_type())).collect();
 
     None
@@ -35,36 +38,55 @@ impl Hand {
 
         let rank_hs: HashSet<_> = HashSet::from_iter(ranks.iter());
         let suite_hs: HashSet<_> = HashSet::from_iter(suites.iter());
-        let is_straight;
+        let is_flush;
         if suite_hs.len() == 1 {
-            is_straight = true;
+            is_flush = true;
         } else {
-            is_straight = false;
+            is_flush = false;
         }
 
+        // Determine what kind of hand it is
+        let hand_type;
         match rank_hs.len() {
             5 => {
-
+                hand_type = high_card_or_straight(&self.cards)
             },
             4 => {
-
+                hand_type = HandType::OnePair
             },
             3 => {
-
+                hand_type = two_pair_or_three_of_a_kind(&self.cards)
             },
             2 => {
-
+                hand_type = full_house_or_four_of_a_kind(&self.cards)
             },
-            1 => {
-                
-            },
-            _ => panic!("No cards in hand.")
+            _ => hand_type = HandType::HighCard
         }
 
 
-        HandType::HighCard
+        if hand_type == HandType::HighCard && is_flush {
+            return HandType::Flush
+        } else if hand_type == HandType::Straight && is_flush {
+            return HandType::StraightFlush
+        } else {
+            return hand_type
+        }
     }
 
+}
+
+fn high_card_or_straight(cards: &Vec<Card>) -> HandType {
+    
+}
+
+fn two_pair_or_three_of_a_kind(cards: &Vec<Card>) -> HandType {
+
+    HandType::HighCard
+}
+
+fn full_house_or_four_of_a_kind(cards: &Vec<Card>) -> HandType {
+
+    HandType::HighCard
 }
 
 struct Card {
@@ -82,6 +104,7 @@ impl Card {
     }
 }
 
+#[derive(Hash, Eq, PartialEq)]
 enum Suite {
     CLUBS,
     DIAMONDS,
