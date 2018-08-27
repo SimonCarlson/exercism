@@ -59,7 +59,7 @@ impl Hand {
                 hand_type = high_card_or_straight(&self.cards)
             },
             4 => {
-                hand_type = HandType::OnePair
+                hand_type = HandType::OnePair([ranks[0].0,ranks[1].0,ranks[2].0,ranks[3].0,ranks[4].0])
             },
             3 => {
                 hand_type = two_pair_or_three_of_a_kind(&self.cards)
@@ -72,13 +72,13 @@ impl Hand {
 
         if let HandType::HighCard([_, _, _, _, _]) = hand_type {
             if is_flush {
-                return HandType::Flush
+                return HandType::Flush([ranks[0].0,ranks[1].0,ranks[2].0,ranks[3].0,ranks[4].0])
             }
         }
 
-        if let HandType::Straight = hand_type {
+        if let HandType::Straight([_, _, _, _, _]) = hand_type {
             if is_flush {
-                return HandType::StraightFlush
+                return HandType::StraightFlush([ranks[0].0,ranks[1].0,ranks[2].0,ranks[3].0,ranks[4].0])
             }
         }
 
@@ -99,7 +99,7 @@ fn high_card_or_straight(cards: &Vec<Card>) -> HandType {
         }
     }
 
-    HandType::Straight
+    HandType::Straight([*ranks[0],*ranks[1],*ranks[2],*ranks[3],*ranks[4]])
 }
 
 fn two_pair_or_three_of_a_kind(cards: &Vec<Card>) -> HandType {
@@ -111,11 +111,11 @@ fn two_pair_or_three_of_a_kind(cards: &Vec<Card>) -> HandType {
     for rank in &ranks {
         let x = ranks.iter().filter(|v| *v == rank).count();
         if x == 3 {
-            return HandType::ThreeOfAKind
+            return HandType::ThreeOfAKind([*ranks[0],*ranks[1],*ranks[2],*ranks[3],*ranks[4]])
         }
     }
 
-    HandType::TwoPair
+    HandType::TwoPair([*ranks[0],*ranks[1],*ranks[2],*ranks[3],*ranks[4]])
 }
 
 fn full_house_or_four_of_a_kind(cards: &Vec<Card>) -> HandType {
@@ -127,11 +127,11 @@ fn full_house_or_four_of_a_kind(cards: &Vec<Card>) -> HandType {
     for rank in &ranks {
         let x = ranks.iter().filter(|v| *v == rank).count();
         if x == 4 {
-            return HandType::FourOfAKind
+            return HandType::FourOfAKind([*ranks[0],*ranks[1],*ranks[2],*ranks[3],*ranks[4]])
         }
     }
 
-    HandType::FullHouse
+    HandType::FullHouse([*ranks[0],*ranks[1],*ranks[2],*ranks[3],*ranks[4]])
 }
 
 struct Card {
