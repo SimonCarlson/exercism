@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 
 pub fn anagrams_for<'a>(word: &str, possible_anagrams: &[&'a str]) -> HashSet<&'a str> {
-    let mut is_anagram = true;
     let mut return_values: HashSet<&'a str> = HashSet::new();
     let mut word_vec: Vec<_> = word.chars().collect();
     word_vec[0].make_ascii_lowercase();
@@ -14,11 +13,9 @@ pub fn anagrams_for<'a>(word: &str, possible_anagrams: &[&'a str]) -> HashSet<&'
         anagram_vec.sort_by(|a, b| a.cmp(b));
         println!("{:?}", anagram_vec);
         
-
-        if word_vec == anagram_vec {
+        if word_vec == anagram_vec && &word != anagram {
             return_values.insert(anagram);
         }
-        is_anagram = true;
     }
 
     return_values
